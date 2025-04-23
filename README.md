@@ -28,14 +28,15 @@ Aplicación de consola en Java que implementa la técnica Pomodoro: ciclos de tr
 
 ```bash
 pomodoro-timer/
-├── src/
-│   └── main/
-│       └── java/
-│           └── pomodoro/
-│               ├── Config.java           # Configuración de tiempos y ciclos
-│               ├── PomodoroApp.java      # Clase principal con la lógica del ciclo
-│               ├── SessionType.java      # Enum con tipos de sesión
-│               └── TimerService.java     # Temporizador y mensajes en consola
+├── app/
+│   └── src/
+│       └── main/
+│           └── java/
+│               └── pomodoro/
+│                   ├── Config.java           # Configuración de tiempos y ciclos
+│                   ├── PomodoroApp.java      # Clase principal con la lógica del ciclo
+│                   ├── SessionType.java      # Enum con tipos de sesión
+│                   └── TimerService.java     # Temporizador y mensajes en consola
 ├── build.gradle
 ├── settings.gradle
 └── README.md
@@ -67,5 +68,5 @@ Desde la raíz del proyecto, compilar y ejecutar con:
 
 ```bash
 ./gradlew build
-java -cp build/classes/java/main pomodoro.PomodoroApp
+java -cp app/build/classes/java/main pomodoro.timer.PomodoroApp
 ```
