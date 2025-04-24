@@ -34,7 +34,7 @@ public class PomodoroWindow extends JFrame {
     private void startTimer() {
         startButton.setEnabled(false); // desactivar botón
 
-        int duration = 25 * 60; // 25 minutos (podés usar Config.WORK_DURATION si lo integrás)
+        int duration = 1 * 20; // 25 minutos (usar Config.WORK_DURATION si lo integrás)
 
         timerThread = new TimerThread(duration, new TimerThread.TimerListener() {
             @Override
