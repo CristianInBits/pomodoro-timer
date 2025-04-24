@@ -7,7 +7,8 @@ public class PomodoroWindow extends JFrame {
 
     private JLabel timerLabel;
     private JButton startButton;
-    private TimerThread timerThread;
+
+    private PomodoroController controller;
 
     public PomodoroWindow() {
         setTitle("🕒 Pomodoro Timer");
@@ -21,7 +22,12 @@ public class PomodoroWindow extends JFrame {
 
         startButton = new JButton("Iniciar");
 
-        startButton.addActionListener(e -> startTimer());
+        controller = new PomodoroController(this);
+
+        startButton.addActionListener(e -> {
+            startButton.setEnabled(false);
+            controller.startNextSession();
+        });
 
         // Layout
         setLayout(new BorderLayout());
@@ -31,28 +37,30 @@ public class PomodoroWindow extends JFrame {
         setVisible(true);
     }
 
-    private void startTimer() {
-        startButton.setEnabled(false); // desactivar botón
+    public PomodoroController getController() {
+        return controller;
+    }
 
-        int duration = 1 * 20; // 25 minutos (usar Config.WORK_DURATION si lo integrás)
+    public void updateTime(int secondsLeft) {
+        SwingUtilities.invokeLater(() -> timerLabel.setText(formatTime(secondsLeft)));
+    }
 
-        timerThread = new TimerThread(duration, new TimerThread.TimerListener() {
-            @Override
-            public void onTick(int remainingSeconds) {
-                SwingUtilities.invokeLater(() -> timerLabel.setText(formatTime(remainingSeconds)));
-            }
+    public void updateSessionLabel(pomodoro.timer.SessionType type) {
+        String label;
+        switch (type) {
+            case WORK -> label = "🛠️ Trabajo";
+            case SHORT_BREAK -> label = "☕ Descanso corto";
+            case LONG_BREAK -> label = "🧘 Descanso largo";
+            default -> label = "Pomodoro";
+        }
+        setTitle("Pomodoro Timer - " + label);
+    }
 
-            @Override
-            public void onFinish() {
-                SwingUtilities.invokeLater(() -> {
-                    timerLabel.setText("¡Fin!");
-                    startButton.setEnabled(true); // permitir reinicio
-                    JOptionPane.showMessageDialog(PomodoroWindow.this, "⏰ ¡Pomodoro terminado!");
-                });
-            }
+    public void notifySessionEnd(pomodoro.timer.SessionType type) {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this, "✅ " + type.name().replace("_", " ") + " completado");
+            getController().startNextSession(); // ← Aquí está la clave
         });
-
-        timerThread.start();
     }
 
     private String formatTime(int totalSeconds) {
